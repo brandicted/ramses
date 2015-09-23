@@ -143,7 +143,8 @@ class TestGenerateModelCls(object):
             '_auth_model': False,
             '_public_fields': ['public_field1'],
             '_auth_fields': ['auth_field1'],
-            '_nested_relationships': ['nested_field1']
+            '_nested_relationships': ['nested_field1'],
+            '_nesting_redundancy': 1
         }
 
     @patch('ramses.models.resolve_to_callable')
@@ -171,6 +172,7 @@ class TestGenerateModelCls(object):
         assert model_cls._public_fields == ['public_field1']
         assert model_cls._auth_fields == ['auth_field1']
         assert model_cls._nested_relationships == ['nested_field1']
+        assert model_cls._nesting_redundancy == 1
         assert model_cls.foo == 'bar'
         assert issubclass(model_cls, models.engine.ESBaseDocument)
         assert not issubclass(model_cls, AuthModelMethodsMixin)

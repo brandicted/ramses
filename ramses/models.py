@@ -115,6 +115,9 @@ def generate_model_cls(config, schema, model_name, raml_resource,
         '_auth_fields': schema.get('_auth_fields') or [],
         '_nested_relationships': schema.get('_nested_relationships') or [],
     }
+    if '_nesting_redundancy' in schema:
+        attrs['_nesting_redundancy'] = schema['_nesting_redundancy']
+
     # Generate fields from properties
     properties = schema.get('properties', {})
     for field_name, props in properties.items():

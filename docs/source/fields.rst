@@ -72,7 +72,7 @@ You can use an ``id_field`` in lieu of primary key.
         }
     }
 
-You can alternatively elect a field to be the primary key of your model by setting its ``primary_key`` property under ``_db_settings``. For example, if you decide to use ``username`` as the primary key of your `User` model. This will enable resources to refer to that field in their url, e.g. ``/api/users/john``
+You can alternatively elect a field to be the primary key of your model by setting its ``primary_key`` property under ``_db_settings``. For example, if you decide to use ``username`` as the primary key of your `User` model. This will enable resources to refer to that field in their url, e.g. ``/v1/users/john``
 
 .. code-block:: json
 

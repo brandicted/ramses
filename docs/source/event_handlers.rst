@@ -74,6 +74,9 @@ We will use the following handler to demonstrate how to connect handlers to even
         log.debug(event.view.request)
 
 
+Note that ramses authentication system(login, logout, token claim, token reset) triggers events as well. In particular, ramses authentication views trigger ``before_create`` and ``after_create`` events. When event was triggered by instance or subclass of ramses authentication views, event property ``event.is_auth_view`` will equal to ``True``. This may require additional care when event handlers mutate fields which participate in authentication process.
+
+
 Before vs After
 ---------------
 

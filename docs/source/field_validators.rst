@@ -44,6 +44,9 @@ Field validators should expect following kwargs to be passed:
 Processors are called in order they are listed. Each validator must return processed value which is used a input for next validator if present.
 
 
+Note that ramses authentication system(login, logout, token claim, token reset) triggers events as well. When processor was triggered by ramses authentication system, event ("event" keyword argument passed to processor) property ``event.is_auth_view`` will equal to ``True``. This may require additional care when processors mutate fields which participate in authentication process.
+
+
 Examples
 --------
 

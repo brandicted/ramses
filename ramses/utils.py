@@ -4,6 +4,8 @@ from contextlib import contextmanager
 import six
 import inflection
 
+from nefertari.utils import split_strip
+
 
 log = logging.getLogger(__name__)
 
@@ -337,3 +339,33 @@ def patch_view_model(view_cls, model_cls):
         yield
     finally:
         view_cls.Model = original_model
+
+
+def split_ignored_routes(config):
+    """ Helper function to convert param string into list.
+
+    :param config: Pyramid Configurator instance.
+    """
+    param = 'ramses.ignored_routes'
+    val = config.registry.settings.get(param, '')
+    delim = ',' if ',' in val else '\n'
+    config.registry.settings[param] = split_strip(val, delim)
+
+
+def is_ignored_resource(config, raml_resource):
+    """ Check if resource should be ignored.
+
+    Route is considered ignored when its path starts with one of
+    paths from 'ramses.ignored_routes' config param.
+
+    :param config: Pyramid Configurator instance.
+    :param raml_resource: Instance of ramlfications.raml.ResourceNode.
+    :returns bool: Indicating whether resource should be ignored.
+    """
+    ignored_routes = config.registry.settings[
+        'ramses.ignored_routes']
+    res_path = raml_resource.path
+    for path in ignored_routes:
+        if path and res_path.startswith(path):
+            return True
+    return False

@@ -409,3 +409,43 @@ class TestUtils(object):
         assert view_cls.Model is model1
         assert not model1.called
         model2.assert_called_once_with()
+
+    def test_split_ignored_routes_no_val(self):
+        config = Mock()
+        config.registry.settings = {}
+        utils.split_ignored_routes(config)
+        assert config.registry.settings['ramses.ignored_routes'] == []
+
+    def test_split_ignored_routes(self):
+        config = Mock()
+        config.registry.settings = {
+            'ramses.ignored_routes': '/users/self,/stories/{id}'}
+        utils.split_ignored_routes(config)
+        assert set(config.registry.settings['ramses.ignored_routes']) == {
+            '/users/self', '/stories/{id}'}
+
+    def test_split_ignored_routes_newline_delim(self):
+        config = Mock()
+        config.registry.settings = {
+            'ramses.ignored_routes': '/users/self\n/stories/{id}'}
+        utils.split_ignored_routes(config)
+        assert set(config.registry.settings['ramses.ignored_routes']) == {
+            '/users/self', '/stories/{id}'}
+
+    def test_is_ignored_resource_true(self):
+        config = Mock()
+        config.registry.settings = {'ramses.ignored_routes': ['/users']}
+        raml_res = Mock(path='/users')
+        assert utils.is_ignored_resource(config, raml_res)
+
+    def test_is_ignored_resource_parent_true(self):
+        config = Mock()
+        config.registry.settings = {'ramses.ignored_routes': ['/users']}
+        raml_res = Mock(path='/users/{id}')
+        assert utils.is_ignored_resource(config, raml_res)
+
+    def test_is_ignored_resource_false(self):
+        config = Mock()
+        config.registry.settings = {'ramses.ignored_routes': ['/users']}
+        raml_res = Mock(path='/stories')
+        assert not utils.is_ignored_resource(config, raml_res)

@@ -7,7 +7,7 @@ from .acl import generate_acl
 from .utils import (
     is_dynamic_uri, resource_view_attrs, generate_model_name,
     dynamic_part_name, attr_subresource, singular_subresource,
-    get_static_parent)
+    get_static_parent, is_ignored_resource)
 
 
 log = logging.getLogger(__name__)
@@ -131,6 +131,8 @@ def generate_server(raml_root, config):
 
     for raml_resource in raml_root.resources:
         if raml_resource.path in generated_resources:
+            continue
+        if is_ignored_resource(config, raml_resource):
             continue
 
         # Get Nefertari parent resource

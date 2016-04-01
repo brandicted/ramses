@@ -33,10 +33,12 @@ class TestHelperFunctions(object):
         generators.generate_server(Mock(resources=None), 'foo')
         assert not mock_gen.called
 
+    @patch.object(generators, 'is_ignored_resource')
     @patch.object(generators, '_get_nefertari_parent_resource')
     @patch.object(generators, 'generate_resource')
     def test_generate_server_resources_generated(
-            self, mock_gen, mock_get):
+            self, mock_gen, mock_get, mock_check):
+        mock_check.return_value = False
         config = Mock()
         resources = [
             Mock(path='/foo'),
@@ -49,10 +51,12 @@ class TestHelperFunctions(object):
             call(config, resources[1], mock_get()),
         ])
 
+    @patch.object(generators, 'is_ignored_resource')
     @patch.object(generators, '_get_nefertari_parent_resource')
     @patch.object(generators, 'generate_resource')
     def test_generate_server_call_per_path(
-            self, mock_gen, mock_get):
+            self, mock_gen, mock_get, mock_check):
+        mock_check.return_value = False
         config = Mock()
         resources = [
             Mock(path='/foo'),
@@ -61,6 +65,21 @@ class TestHelperFunctions(object):
         generators.generate_server(Mock(resources=resources), config)
         assert mock_get.call_count == 1
         mock_gen.assert_called_once_with(config, resources[0], mock_get())
+
+    @patch.object(generators, 'is_ignored_resource')
+    @patch.object(generators, '_get_nefertari_parent_resource')
+    @patch.object(generators, 'generate_resource')
+    def test_generate_server_ignored_resources(
+            self, mock_gen, mock_get, mock_check):
+        mock_check.return_value = True
+        config = Mock()
+        resources = [
+            Mock(path='/foo'),
+            Mock(path='/bar'),
+        ]
+        generators.generate_server(Mock(resources=resources), config)
+        assert not mock_gen.called
+        assert not mock_get.called
 
 
 @pytest.mark.usefixtures('engine_mock')

@@ -10,6 +10,7 @@ log = logging.getLogger(__name__)
 
 def includeme(config):
     from .generators import generate_server, generate_models
+    from .utils import split_ignored_routes
     Settings = dictset(config.registry.settings)
     config.include('nefertari.engine')
 
@@ -56,6 +57,7 @@ def includeme(config):
     config.include('nefertari.elasticsearch')
 
     log.info('Starting server generation')
+    split_ignored_routes(config)
     generate_server(raml_root, config)
 
     log.info('Running nefertari.engine.setup_database')

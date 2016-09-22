@@ -101,3 +101,18 @@ You can link your schema definition for each resource by adding it to the ``post
                     schema: !include schemas/items.json
 
 
+Generated model names
+---------------------
+
+Because ramses automatically generates DB model names from RAML resources, it might be useful to understand how those names are generated.
+
+Here are few examples that should make it self-explanatory:
+
+.. code-block:: yaml
+
+    /users -> User
+    /alienusers -> Alienusers
+    /alien-users -> AlienUser
+
+
+This might come handy when trying to access models from ramses event handlers for example.

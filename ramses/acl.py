@@ -8,6 +8,7 @@ from pyramid.security import (
 from nefertari.acl import CollectionACL
 from nefertari.resource import PERMISSIONS
 from nefertari.elasticsearch import ES
+from nefertari.utils.data import DataProxy
 
 from .utils import resolve_to_callable, is_callable_tag
 
@@ -144,8 +145,13 @@ class BaseACL(CollectionACL):
         return tuple(new_acl)
 
     def __acl__(self):
-        """ Apply callables to `self._collection_acl` and return result. """
-        return self._apply_callables(acl=self._collection_acl)
+        """ Apply callables to `self._item_acl` if request is on a specific item or `self._collection_acl` for everything
+            else and return result.
+        """
+        if hasattr(self.request, 'context') and isinstance(self.request.context, DataProxy):
+            return self.item_acl(self.request.context)
+        else:
+            return self._apply_callables(acl=self._collection_acl)
 
     def generate_item_acl(self, item):
         acl = self._apply_callables(

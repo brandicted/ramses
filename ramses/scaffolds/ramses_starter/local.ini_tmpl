@@ -34,9 +34,13 @@ cors.enable = false
 cors.allow_origins = %(base_url)s
 cors.allow_credentials = true
 
+version = v1
+
 [composite:main]
 use = egg:Paste#urlmap
-/api/ = {{package}}
+
+# should match the path segment of baseUri in the RAML file
+/v1/ = {{package}}
 
 [server:main]
 use = egg:waitress#main

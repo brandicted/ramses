@@ -10,7 +10,7 @@ requires = [
     'inflection',
     'nefertari>=0.7.0',
     'pyramid',
-    'ramlfications==0.1.8',
+    'ramlfications==0.1.9',
     'six',
     'transaction',
 ]
@@ -26,6 +26,7 @@ setup(name='ramses',
           "Programming Language :: Python :: 3",
           "Programming Language :: Python :: 3.4",
           "Programming Language :: Python :: 3.5",
+          "Programming Language :: Python :: 3.6"
           "Framework :: Pyramid",
           "Topic :: Internet :: WWW/HTTP",
           "Topic :: Internet :: WWW/HTTP :: WSGI :: Application",
